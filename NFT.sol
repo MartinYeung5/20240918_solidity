@@ -63,7 +63,7 @@ contract NFTSwap is IERC721Receiver {
         emit List(msg.sender, _nftAddr, _tokenId, _price);
     }
 
-    // 收購(地址, NFT ID)
+    // 購買(地址, NFT ID)
     function purchase(address _nftAddr, uint256 _tokenId) public payable {
         Order storage _order = nftList[_nftAddr][_tokenId]; 
         require(_order.price > 0, "Invalid Price"); // 限制:價格要求大約0
