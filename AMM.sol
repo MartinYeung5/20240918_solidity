@@ -25,7 +25,7 @@ contract SimpleSwap is ERC20 {
         );
 
     // 初始化代幣地址
-    constructor(IERC20 _token0, IERC20 _token1) ERC20("SimpleSwap", "SS") {
+    constructor(IERC20 _token0, IERC20 _token1) ERC20("AMM", "AMM") {
         token0 = _token0;
         token1 = _token1;
     }
