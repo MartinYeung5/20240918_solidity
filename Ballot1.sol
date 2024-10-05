@@ -29,13 +29,13 @@ contract Ballot2 {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == chairperson, "Only the chairperson can call this function");
+        require(msg.sender == chairperson, "Only for chairperson");
         _;
     }
 
     constructor(uint256 _startTime, uint256 _endTime, bytes32[] memory proposalNames) {
-        require(_startTime >= block.timestamp, "startTime must be in the future");
-        require(_endTime >= _startTime, "endTime must be greater than startTime");
+        require(_startTime >= block.timestamp, "startTime should after the current time");
+        require(_endTime >= _startTime, "endTime shoudl after the startTime");
 
         startTime = _startTime;
         endTime = _endTime;
@@ -49,7 +49,7 @@ contract Ballot2 {
     }
 
     function giveRightToVote(address voter) external {
-        require(msg.sender == chairperson, "Only chairperson can give right to vote.");
+        require(msg.sender == chairperson, "Only chairperson can control the rights.");
         require(!voters[voter].voted, "The voter already voted.");
         require(voters[voter].weight == 0, "The voter already has voting rights.");
 
@@ -60,7 +60,7 @@ contract Ballot2 {
         Voter storage sender = voters[msg.sender];
         require(sender.weight != 0, "You have no right to vote.");
         require(!sender.voted, "You already voted.");
-        require(to != msg.sender, "Self-delegation is disallowed.");
+        require(to != msg.sender, "Self-delegation is not allowed.");
 
         while (voters[to].delegate != address(0)) {
             to = voters[to].delegate;
@@ -81,7 +81,7 @@ contract Ballot2 {
 
     function vote(uint256 proposal) external specificVotingPeriod {
         Voter storage sender = voters[msg.sender];
-        require(sender.weight != 0, "Has no right to vote.");
+        require(sender.weight != 0, "Not allow to vote.");
         require(!sender.voted, "Already voted.");
         sender.voted = true;
         sender.vote = proposal;
@@ -103,7 +103,7 @@ contract Ballot2 {
     }
 
     function setVoterWeight(address voter, uint256 weight) external specificVotingPeriod onlyOwner {
-        require(weight > 0, "Weight must be greater than 0.");
+        require(weight > 0, "Weight should be greater than 0.");
 
         Voter storage v = voters[voter];
         v.weight = weight;
